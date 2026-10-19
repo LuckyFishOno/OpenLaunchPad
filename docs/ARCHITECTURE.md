@@ -1,0 +1,207 @@
+# OpenLaunchPad Architecture
+
+OpenLaunchPad is a native macOS launcher built with documented system APIs. The codebase separates application data, display geometry, deterministic layout, and presentation so that each area can evolve without coupling the entire launcher to a specific screen or interaction implementation.
+
+## Module Boundaries
+
+```text
+AppCore ───────────────────────────────┐
+                                       │
+DisplayCore ──> LayoutCore ────────────┼──> OpenLaunchPad runtime
+                                       │
+Persisted layout state ────────────────┘
+```
+
+### AppCore
+
+`AppCore` owns application identity and metadata, catalog discovery, local search, persisted launcher layout, reconciliation, drag-and-drop interaction state, and deterministic paging motion/input models.
+
+Application discovery and user layout are intentionally separate. A temporary discovery failure must not silently rewrite the user's persisted arrangement.
+
+### DisplayCore
+
+`DisplayCore` converts `NSScreen` information into display context expressed in logical points. Screen geometry, safe areas, backing scale, and display changes are runtime inputs rather than assumptions encoded in the UI.
+
+### LayoutCore
+
+`LayoutCore` contains deterministic grid and folder layout solvers. Given display context and layout preferences, it produces geometry without depending on AppKit view state.
+
+This design keeps the launcher adaptive across built-in displays, external monitors, scaled modes, and mixed backing scales.
+
+### OpenLaunchPad Runtime
+
+The Xcode application uses two processes. `OpenLaunchPad.app` is a short-lived Dock launcher that opens the embedded `OpenLaunchPadAgent.app`, or sends a toggle notification to an already-running agent. The accessory agent owns AppKit windows, Core Animation presentation layers, search presentation, paging, icon rendering, pointer interaction, keyboard navigation, and accessibility controls. Both processes use accessory activation; only the user-pinned launcher is intended to remain in the Dock. Embedding the agent under `Contents/Library/LoginItems` does not register it to launch at login.
+
+SwiftPM exposes and tests the core libraries only. XcodeGen defines the two application targets and embeds the agent in the distributable launcher bundle.
+
+Folder visual resources and opening/closing animation lifetimes belong to
+`FolderPresentation`. Folder page surfaces, selection, swipe tracking, settling,
+and cancellation belong to `FolderPagingController`. Focused root-view
+extensions integrate those owners with display/layout solving, icon loading,
+keyboard navigation, and AppKit pointer handoffs. Animation callbacks validate
+generation and resource identity before changing the active presentation.
+
+Drag proxy snapshots and lift/merge animation construction belong to
+`DragProxyPresentation`. `DragVisualCoordinator` owns delayed landing handoffs,
+rejects replaced or cancelled callbacks, and retires pending proxies on idle
+cleanup. Focused root-view extensions connect preview/reflow geometry and landing
+choices to the live page surfaces and AppKit hit targets. Persisted layout commit
+coordination remains separate from visual completion ownership.
+
+
+
+Visual constants are centralized in typed style or metrics values. Interactive animations prefer stable layer ownership and presentation-state continuity to avoid duplicate rendering, afterimages, and discontinuities during rapid interaction.
+
+### Desktop Background and Menu Region
+
+`WallpaperLayout` maps the wallpaper onto the complete display in backing pixels using the desktop's scaling and clipping options. Menu-bar, Dock, and notch reservations constrain controls, not the wallpaper canvas. `FrostedWallpaperRasterLayout` then reduces only the intentionally blurred material to a maximum 1280-pixel long edge, scaling the blur radius to preserve its screen-space appearance. `DesktopWallpaperProvider` caches this frosted image and the native-resolution plain desktop's menu-bar rows by file metadata, display geometry, menu height, and desktop options.
+
+The main window and `MenuBarBackdropWindow` directly share the same small frosted image through Core Animation layers. Both map it to identical full-display coordinates; the menu window clips the top region without first cropping the bitmap, keeping interpolation continuous at the seam. This avoids three full-screen `NSImageView` backing stores. The menu has no independent visual-effect material or tint. Its complete continuation layer, including the native plain-desktop rows and frosted wallpaper, uses the main window's exact opacity samples, key times, and duration. The continuation overlaps the main canvas by one backing pixel and remains spatially fixed instead of receiving the foreground scale. Fractional plain-desktop crop heights round outward while preserving the original pixel-to-point mapping. Presentation also applies one display-centered compositor transform to the main content: foreground controls and tiles converge from a restrained 1.085× dispersed state on open and expand back to it on close. The full-screen wallpaper receives the exact inverse transform, so only the launcher foreground moves and the desktop remains spatially fixed across the menu-window seam. Relayout sets its bounds and position independently, preserving this transform during rapid reversal.
+
+Wallpaper output is rendered eagerly at the existing pixel format so cached images do not retain a source/filter graph. Temporary Core Image resources are cleared after rendering. App icon decoding preserves resolution, bit depth, and color gamut. The icon cache keeps one original representation per application: smaller requests reuse a larger image already loaded, while larger requests still decode at their original requested size. A late smaller load cannot downgrade the cache. After the launcher closes, presentation-only page trees, wallpaper references, and transient icons are released; the catalog, layout, and bounded first-page warm set remain resident. See [memory verification](MEMORY.md).
+
+This is a visual replacement of the menu region while preserving the system Dock. AppKit's actual `hideMenuBar` presentation mode requires `hideDock`, so it cannot provide an interactive Dock. The main window remains below Dock and the top continuation closes when the app deactivates. No global menu/Dock settings are changed.
+
+The radial transform explicitly compensates for each layer's actual `anchorPoint` using `CenteredPresentationTransform`. AppKit-owned layers can have corner anchors; a bare scale would therefore send all icons diagonally. The compensated transform fixes the full display center while moving opposite sides equally in opposite directions, without changing AppKit-owned anchors or positions.
+
+## Paging
+
+Paging is designed around direct manipulation:
+
+- Trackpad movement maps directly to page displacement while the gesture is active.
+- Adjacent page surfaces are staged near the current page to avoid first-frame hierarchy work.
+- Release settling uses gesture velocity and a smooth deceleration profile.
+- Long-session resource use is bounded so repeated paging does not continuously grow the active view or layer hierarchy.
+- Reduce Motion disables nonessential motion while preserving navigation behavior.
+
+`PageMotionProfile` defines the 0.56-second discrete transition and distance-dependent, velocity-matched interactive settling. Duration is not stretched after calculating the curve. `PageSwipeInputGate` prevents a gesture begun during settling from interrupting it or entering midway after it completes. Phase-less wheel events still update the idle timer while animation is busy, preserving one page per burst.
+
+Invalidating page content preserves ownership of old surfaces until rebuilding explicitly detaches them. This prevents staged adjacent-page trees from being orphaned after searching or reordering. See [paging measurements and regression checks](PAGING_PERFORMANCE.md).
+
+## Search
+
+Search normalization is case-insensitive and width/diacritic tolerant. Matching requires the complete normalized query to appear as one contiguous substring of the application display name.
+
+The search field treats committed text and IME marked text as separate states. Marked text affects placeholder presentation immediately without prematurely committing it as a search query.
+
+On a new opening, `presentFromLauncher()` resets search before ordering the window front. `resetForPresentation()` discards unfinished IME input, ends field-editor observation/editing, clears text, and cancels old focus-animation callbacks. The root restores grid keyboard focus, page zero, and the unfiltered application list. The empty magnifier/placeholder returns to its centered idle layout without an old-query flash during fade-in.
+
+This reset also applies when reopening during dismissal, but not to live display changes or a show request while already presented. It does not change saved application order or folders. The [standalone runtime check](../Tests/Runtime/README.md) verifies these boundaries.
+
+## Drag and Reordering
+
+Same-page reordering keeps one page surface as the visual owner. The dragged application uses a temporary proxy while neighboring tiles move in place. This avoids duplicate page trees and prevents release-time afterimages.
+
+Persistent changes are committed transactionally. Failure paths restore the pre-drag layout rather than leaving presentation state partially committed.
+
+### Page-Local Persistence
+
+`LauncherLayoutDocument` schema 2 stores `pages: [[LauncherLayoutItem]]`. A page
+may intentionally be short or an interior page may be empty. `items` remains a
+flattened compatibility projection for search and legacy consumers, not a
+representation from which persistent page boundaries may be reconstructed.
+`ResolvedLaunchpadPages` maps those boundaries to flat selection indices using
+explicit page ranges instead of `index / itemsPerPage`.
+
+`normalizedForPageCapacity(_:)` only pushes excess items forward, placing an
+overflow suffix at the front of the following page and creating pages as
+needed. It never draws items backward to fill a vacancy, even when a larger
+display increases grid capacity. Empty trailing pages are removed, while
+interior gaps and at least one page are retained.
+
+`LauncherLayoutDraft.moveRootItem(_:toPage:at:pageCapacity:)` removes the source,
+inserts at a final page-local index, then propagates overflow forward. Only the
+source page compacts after removal. For example, with capacity four, moving B
+into page 2 at index 1 changes `ABCD | EFGH | IJKL` into
+`ACD | EBFG | HIJK | L`; E does not move backward into page 1. A folder is one
+root item for these rules. Merging apps keeps the new folder on the target's
+page, and catalog reconciliation preserves page boundaries while appending
+new apps to the last page.
+
+Draft changes and store commits compare `pages`, not only flattened `items`.
+Moving the final app to a new page must persist even if its flattened order
+does not change. Stable application/folder identifiers remain authoritative
+when a partial catalog leaves unresolved references.
+
+### Schema Migration and Recovery
+
+The codec automatically migrates schema 1 to schema 2 without incrementing the
+document revision. The former flat list initially becomes one page, and runtime
+normalization applies the actual display capacity instead of guessing it in
+the file store. Folder identities, contents, titles, and item order are retained.
+Unknown future schemas are rejected without overwriting the source.
+
+Before writing migrated data, `AtomicLauncherLayoutFileIO` preserves the
+original bytes in `LauncherLayout.pre-pages.backup.json` next to the layout
+file. It never overwrites an existing backup, and a backup/write failure does
+not publish the migrated document to the store's in-memory cache. Restoration
+requires quitting both processes and preserving the current file before
+replacing it with a copy of the backup; subsequent arrangement edits are not
+part of the pre-migration backup.
+
+### Edge Paging and Release Ownership
+
+While dragging, an edge dwell turns one page, then re-arms after that animation
+finishes if the pointer is still at the edge. The gesture can traverse existing
+pages in either direction without requiring an exit/re-entry. One temporary
+trailing page is available for insertion; holding at the edge must not create
+an unbounded sequence of empty pages. Each projected layout is derived from
+the original drag snapshot, so merely visiting pages does not cumulatively
+commit reorders.
+
+The drag session and `LauncherDragStateMachine` receive the same page-local
+drop target through `setDragTarget`. The screen-edge strip lies outside the
+ordinary icon grid but retains the reached page's valid landing slot. This
+avoids accepting a visual target while the state machine still says `.outside`.
+
+Mouse-up immediately marks the session released and cancels the edge timer.
+If a page transition is active, its release point is retained and the drop is
+completed only when the incoming page becomes active; no further dwell may
+start. Generation checks reject stale transition completions after cancellation.
+The original pointer-tracking button remains alive through mouse-up even when
+its page layer has moved offscreen. Persistence and landing animation still
+finish as one coordinated drag commit.
+
+### Regression Coverage
+
+The current suite passes 185 Swift core tests and the Debug application build.
+`LauncherPageLayoutTests` contains 19 deterministic cases for
+legacy migration, explicit page round-tripping, empty/partial pages, overflow,
+forward/reverse moves, folders, reconciliation, and boundary-only commits.
+Four additional state-machine cases cover page insertion, replacing an outside
+target, cancellation, and persistence rollback. `CrossPageDragCheck.swift`
+drives the real AppKit tile's pointer methods with an isolated store to cover
+stationary multi-page dwelling, reverse traversal, edge/mid-animation release,
+cancellation and retiring the exact transition layers, bounded new-page creation,
+and forward overflow. `ResolvedPageCheck.swift` checks compacted visible indices
+against unresolved persisted references. `MenuBarOpeningAnimationCheck.swift`
+constructs the production launcher and top-continuation windows and verifies
+their synchronized opening animations, display-top overlap, and Reduce Motion
+path. These checks do not measure compositor frame pacing or replace manual
+physical-device testing.
+
+## Accessibility and Input
+
+The visual grid is rendered with Core Animation, while native controls provide accessibility and hit-test semantics. Keyboard navigation, right-to-left layout, multi-display behavior, and Reduce Motion are architectural requirements rather than optional visual polish.
+
+On a new complete catalog, `LauncherDefaultLayoutBuilder` places one deterministic
+`Utilities` folder in the first slot of page one. Only direct children of
+`/System/Applications/Utilities` enter it, so similarly named third-party apps
+remain at root. Existing persisted layouts remain authoritative; an incomplete
+first scan is displayed without being persisted so a later complete scan can
+still construct the full default. Reset uses the same builder.
+
+The search field's trailing ellipsis is a native button with one menu command,
+`Reset Launchpad`. The button is outside the translated search-content layer, so
+it cannot shift the centered magnifier/placeholder. Reset requires confirmation,
+refreshes discovery, and is refused when discovery is partial. A successful
+transaction removes custom folders and page boundaries, rebuilds the canonical
+default including Utilities, then returns the UI to page one.
+
+## Project Generation
+
+`project.yml` is the XcodeGen source of truth for the Xcode project. Regenerate the project after changing targets, build settings, resources, or schemes:
+
+```sh
+xcodegen generate
+```

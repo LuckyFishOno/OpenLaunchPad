@@ -1,0 +1,178 @@
+name: OpenLaunchPad
+# OPENLAUNCHPAD_XCODE_LEGACY_RESOURCE_CLEANUP_V1
+
+options:
+  minimumXcodeGenVersion: 2.42.0
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CLANG_ENABLE_MODULES: YES
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+
+targets:
+  AppCore:
+    type: framework
+    platform: macOS
+    sources:
+      - path: Sources/AppCore
+        excludes:
+          - "**/*.before-*"
+          - "**/*.backup-*"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.AppCore
+        GENERATE_INFOPLIST_FILE: YES
+
+  DisplayCore:
+    type: framework
+    platform: macOS
+    sources:
+      - path: Sources/DisplayCore
+        excludes:
+          - "**/*.before-*"
+          - "**/*.backup-*"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.DisplayCore
+        GENERATE_INFOPLIST_FILE: YES
+
+  LayoutCore:
+    type: framework
+    platform: macOS
+    sources:
+      - path: Sources/LayoutCore
+        excludes:
+          - "**/*.before-*"
+          - "**/*.backup-*"
+    dependencies:
+      - target: DisplayCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.LayoutCore
+        GENERATE_INFOPLIST_FILE: YES
+
+  OpenLaunchPadAgent:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/OpenLaunchPad
+        excludes:
+          - main.swift
+          - Resources
+          - "**/*.backup-*"
+          - "**/*.before-*"
+      - path: Sources/OpenLaunchPadAgent
+        excludes:
+          - "**/*.backup-*"
+          - "**/*.before-*"
+    dependencies:
+      - target: AppCore
+      - target: DisplayCore
+      - target: LayoutCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.OpenLaunchPadAgent
+        PRODUCT_NAME: OpenLaunchPadAgent
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: OpenLaunchPadAgent
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 OpenLaunchPad contributors
+        CODE_SIGN_STYLE: Automatic
+        SKIP_INSTALL: YES
+
+  OpenLaunchPad:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/OpenLaunchPad/main.swift
+      - path: Sources/OpenLaunchPad/Resources
+    dependencies:
+      - target: OpenLaunchPadAgent
+        embed: true
+        link: false
+        codeSign: true
+        copy:
+          destination: wrapper
+          subpath: Contents/Library/LoginItems
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.OpenLaunchPad
+        PRODUCT_NAME: OpenLaunchPad
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: OpenLaunchPad
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 OpenLaunchPad contributors
+        CODE_SIGN_STYLE: Automatic
+
+  DisplayCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/DisplayCoreTests
+        excludes:
+          - "**/*.before-*"
+          - "**/*.backup-*"
+    dependencies:
+      - target: DisplayCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.DisplayCoreTests
+        GENERATE_INFOPLIST_FILE: YES
+
+  AppCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/AppCoreTests
+        excludes:
+          - "**/*.before-*"
+          - "**/*.backup-*"
+    dependencies:
+      - target: AppCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.AppCoreTests
+        GENERATE_INFOPLIST_FILE: YES
+
+  LayoutCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/LayoutCoreTests
+        excludes:
+          - "**/*.before-*"
+          - "**/*.backup-*"
+    dependencies:
+      - target: DisplayCore
+      - target: LayoutCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.LayoutCoreTests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  OpenLaunchPad:
+    build:
+      targets:
+        OpenLaunchPad: all
+        AppCoreTests: [test]
+        DisplayCoreTests: [test]
+        LayoutCoreTests: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - AppCoreTests
+        - DisplayCoreTests
+        - LayoutCoreTests
