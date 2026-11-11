@@ -8,14 +8,17 @@ public struct AppMetadataResolver: Sendable {
             return nil
         }
 
-        let bundle = Bundle(url: bundleURL)
-        let fallbackName = bundleURL.deletingPathExtension().lastPathComponent
+        // Read icons and launch the actual bundle, avoiding Finder's shortcut
+        // badge on application symlinks such as /Applications/Safari.app.
+        let resolvedBundleURL = bundleURL.resolvingSymlinksInPath()
+        let bundle = Bundle(url: resolvedBundleURL)
+        let fallbackName = resolvedBundleURL.deletingPathExtension().lastPathComponent
         let displayName = localizedName(from: bundle) ?? fallbackName
 
         return ApplicationRecord(
             displayName: displayName,
             bundleIdentifier: bundle?.bundleIdentifier,
-            bundleURL: bundleURL
+            bundleURL: resolvedBundleURL
         )
     }
 

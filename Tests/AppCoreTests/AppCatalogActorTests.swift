@@ -10,6 +10,13 @@ final class AppCatalogActorTests: XCTestCase {
         let target = temporary.appendingPathComponent("System/Safari.app")
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        let contents = target.appendingPathComponent("Contents")
+        try FileManager.default.createDirectory(at: contents, withIntermediateDirectories: true)
+        let metadata = try PropertyListSerialization.data(
+            fromPropertyList: ["CFBundleIdentifier": "com.apple.Safari", "CFBundleName": "Safari"],
+            format: .xml, options: 0
+        )
+        try metadata.write(to: contents.appendingPathComponent("Info.plist"))
         let link = root.appendingPathComponent(".Safari.app")
         try FileManager.default.createSymbolicLink(at: link, withDestinationURL: target)
         try FileManager.default.createDirectory(
@@ -29,7 +36,11 @@ final class AppCatalogActorTests: XCTestCase {
 
         let applications = try StandardApplicationDiscoverySource(roots: [root]).discoverApplications()
 
-        XCTAssertEqual(applications.map(\.bundleURL.path), [link.path])
+        XCTAssertEqual(applications.map(\.bundleURL.path), [target.resolvingSymlinksInPath().path])
+        XCTAssertEqual(applications.first?.displayName, "Safari")
+        XCTAssertEqual(applications.first?.id, ApplicationIdentity(
+            bundleIdentifier: "com.apple.Safari", bundleURL: link
+        ))
     }
 
     func testRefreshDeduplicatesAndSortsApplications() async {
