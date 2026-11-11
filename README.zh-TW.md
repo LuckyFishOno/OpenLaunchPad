@@ -4,7 +4,7 @@
 
 **為現代 macOS 打造，快速、原生的 Launchpad 風格應用程式啟動器。**
 
-目前版本：**OpenLaunchPad 1.0（build 1）**。
+目前版本：**OpenLaunchPad 1.1（build 2）**。
 
 OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格，支援即時搜尋、資料夾、拖放整理與流暢翻頁。專案開源，以本機運作為優先，使用 Swift、AppKit 與 Core Animation 開發。
 
@@ -142,7 +142,7 @@ swift test --filter FolderMergeGeometryTests
 swift test --filter LauncherLayoutStoreTests/testReconcileAndCommitAppendsNewApplicationsToExistingLayout
 ```
 
-核心測試套件目前包含 194 項確定性測試。視窗、桌布、搜尋、翻頁、拖曳與選單列動畫的 AppKit runtime 檢查方式，請參閱 [Tests/Runtime/README.md](Tests/Runtime/README.md)。
+核心測試套件目前包含 195 項確定性測試。視窗、桌布、搜尋、翻頁、拖曳與選單列動畫的 AppKit runtime 檢查方式，請參閱 [Tests/Runtime/README.md](Tests/Runtime/README.md)。
 
 ## 本機資料與隱私
 

@@ -140,7 +140,7 @@ private struct FileManagerApplicationRootScanner: ApplicationRootScanning {
         guard let enumerator = fileManager.enumerator(
             at: root,
             includingPropertiesForKeys: resourceKeys,
-            options: [.skipsHiddenFiles, .skipsPackageDescendants],
+            options: [.skipsPackageDescendants],
             errorHandler: { _, _ in
                 failureTracker.markFailure()
                 return true
@@ -151,6 +151,21 @@ private struct FileManagerApplicationRootScanner: ApplicationRootScanning {
 
         var urls: [URL] = []
         for case let url as URL in enumerator {
+            let values = try? url.resourceValues(forKeys: [.isHiddenKey, .isSymbolicLinkKey])
+            if values?.isHidden == true {
+                // Safari can be a hidden link in /Applications to a visible
+                // system bundle. Keep that launchable entry, but do not expose
+                // ordinary hidden apps or traverse hidden directories.
+                let target = url.resolvingSymlinksInPath()
+                let targetValues = try? target.resourceValues(forKeys: [.isDirectoryKey, .isHiddenKey])
+                guard values?.isSymbolicLink == true,
+                      url.pathExtension.localizedCaseInsensitiveCompare("app") == .orderedSame,
+                      targetValues?.isDirectory == true,
+                      targetValues?.isHidden == false else {
+                    enumerator.skipDescendants()
+                    continue
+                }
+            }
             urls.append(url)
         }
         return failureTracker.didFail ? .partial(urls) : .complete(urls)

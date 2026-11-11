@@ -4,7 +4,7 @@
 
 **A fast, native Launchpad-style app launcher for modern macOS.**
 
-Current release: **OpenLaunchPad 1.0 (build 1)**.
+Current release: **OpenLaunchPad 1.1 (build 2)**.
 
 OpenLaunchPad gives Apple silicon Macs a familiar full-screen app grid with instant search, folders, drag-and-drop organization, and smooth paging. It is open source, local-first, and built with Swift, AppKit, and Core Animation.
 
@@ -145,7 +145,7 @@ swift test --filter FolderMergeGeometryTests
 swift test --filter LauncherLayoutStoreTests/testReconcileAndCommitAppendsNewApplicationsToExistingLayout
 ```
 
-The core suite currently contains 194 deterministic tests. AppKit runtime
+The core suite currently contains 195 deterministic tests. AppKit runtime
 checks for window, wallpaper, search, paging, drag, and menu-bar animation
 behavior are documented in [Tests/Runtime/README.md](Tests/Runtime/README.md).
 

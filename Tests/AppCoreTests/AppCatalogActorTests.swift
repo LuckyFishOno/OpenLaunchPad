@@ -3,6 +3,35 @@ import Foundation
 import XCTest
 
 final class AppCatalogActorTests: XCTestCase {
+    func testDiscoveryIncludesHiddenApplicationLinkToVisibleBundle() throws {
+        let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: temporary) }
+        let root = temporary.appendingPathComponent("Applications")
+        let target = temporary.appendingPathComponent("System/Safari.app")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        let link = root.appendingPathComponent(".Safari.app")
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: target)
+        try FileManager.default.createDirectory(
+            at: root.appendingPathComponent(".Hidden.app"), withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: root.appendingPathComponent(".Hidden/Nested.app"), withIntermediateDirectories: true
+        )
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent(".Broken.app"),
+            withDestinationURL: temporary.appendingPathComponent("Missing.app")
+        )
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent(".HiddenTarget.app"),
+            withDestinationURL: root.appendingPathComponent(".Hidden.app")
+        )
+
+        let applications = try StandardApplicationDiscoverySource(roots: [root]).discoverApplications()
+
+        XCTAssertEqual(applications.map(\.bundleURL.path), [link.path])
+    }
+
     func testRefreshDeduplicatesAndSortsApplications() async {
         let alpha = makeApplication(name: "Alpha", path: "/Applications/Alpha.app")
         let beta = makeApplication(name: "Beta", path: "/Applications/Beta.app")
