@@ -4,7 +4,7 @@
 
 **A fast, native Launchpad-style app launcher for modern macOS.**
 
-Current release: **OpenLaunchPad 1.2 (build 3)**.
+Current release: **OpenLaunchPad 1.2.1 (build 4)**.
 
 OpenLaunchPad gives Apple silicon Macs a familiar full-screen app grid with instant search, folders, drag-and-drop organization, and smooth paging. It is open source, local-first, and built with Swift, AppKit, and Core Animation.
 

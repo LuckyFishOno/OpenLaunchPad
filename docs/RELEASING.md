@@ -33,7 +33,8 @@ empty, the menu command is hidden and `release.sh` refuses to build.
 5. On a Mac with the previous release, choose **Check for Updates** and confirm
    that it offers, installs, and reopens the new version.
 
-Copies without the updater (1.1 and earlier) must be updated by hand once.
+Copies without the updater (1.1 and earlier) must be updated by hand once. From
+1.2.1 on, opening the replaced app also ends the outdated agent.
 
 To test against another feed, pass `OPENLAUNCHPAD_FEED_URL` and
 `OPENLAUNCHPAD_UPDATE_KEY` to `xcodebuild`.

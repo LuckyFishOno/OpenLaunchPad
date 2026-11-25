@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.2.1 (build 4) — 2026-11-25
+
+### Fixed
+
+- After replacing the app by hand, the old background agent kept running until
+  the next login, so new features such as **Check for Updates** stayed hidden.
+  Opening OpenLaunchPad now ends an outdated agent and starts the new one.
+
+### Validation
+
+- All 207 deterministic core tests passed, including the agent identity cases.
+- Isolated launcher runs passed for an agent whose app was moved to the Trash,
+  overwritten in place, or deleted, for an unchanged copy, and for an agent that
+  refuses to quit.
+- Apple silicon Release build and deep signature verification passed.
+
+### 繁體中文
+
+- 手動取代 App 後，舊的背景程式會一直執行到下次登入，因此看不到 **Check for Updates**
+  等新功能。現在開啟 OpenLaunchPad 時，會先結束過期的背景程式，再啟動新版。
+
 ## 1.2 (build 3) — 2026-11-25
 
 ### Added

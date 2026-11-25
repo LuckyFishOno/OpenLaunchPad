@@ -40,6 +40,7 @@
 		2C8A7FFEF8E53C9623A7AB42 /* LaunchpadRootView+DragInPlaceLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B98269F2353DCFA59A31181 /* LaunchpadRootView+DragInPlaceLanding.swift */; };
 		2FB003D457709F226AE389CC /* DisplayCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6A4BD30C2540632E8CE677B9 /* DisplayCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3123E54B6F735901DD0866C5 /* GridSelectionNavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5427D2C9183A0E9A5812D0E5 /* GridSelectionNavigatorTests.swift */; };
+		336BCB91EA220953E3A7F674 /* AgentIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D8567CD0A8C40A1E286CF /* AgentIdentity.swift */; };
 		3669F677F1BF662243DD2536 /* SparkleUpdates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B069FC5ADB71B315E9CB5B6B /* SparkleUpdates.swift */; };
 		37CC853BBD17270D491EDCBF /* GridMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119759F70679A6209F86FA49 /* GridMetrics.swift */; };
 		380FDAE622DF57E4D91D2933 /* AppCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D77CBA53FD0DC2F4388078BD /* AppCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -72,6 +73,7 @@
 		66407109E06BACE28BCD11E7 /* PageSwipeInputGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C13E51484D5D71A2948F146 /* PageSwipeInputGateTests.swift */; };
 		6663CBAB5F01F9EF166DFCAD /* FolderPagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33984BDF1324C938AAAB6DE /* FolderPagingController.swift */; };
 		69DA53B95FB39445AB9BAC96 /* LaunchpadRootView+PageSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C67EB4D9671721774EF285E /* LaunchpadRootView+PageSwipe.swift */; };
+		6C2575364C0A3B22744C8FD8 /* AgentIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D8567CD0A8C40A1E286CF /* AgentIdentity.swift */; };
 		6D970C45B6D046DBFBF56B61 /* LauncherLayoutStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3C5ADD1A4FC22551E70616 /* LauncherLayoutStore.swift */; };
 		6F1E2FF670846B0FCD701577 /* PageSwipeInputGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7E7E8E990637FFED6F8A5 /* PageSwipeInputGate.swift */; };
 		7239A872B28B7C7EC422F573 /* FolderPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D685EBA3B1B7A510906BABB6 /* FolderPresentation.swift */; };
@@ -129,6 +131,7 @@
 		DF10E2109EE685AC0C2FA18A /* LauncherDefaultLayoutBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49EDDD395F30812ADE5C2D2 /* LauncherDefaultLayoutBuilderTests.swift */; };
 		E041AD3426559FF219C303D4 /* DragVisualMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A1B8A3318122EAD975AB6 /* DragVisualMetrics.swift */; };
 		E16F4B17197A2995B411B2B4 /* AppCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77CBA53FD0DC2F4388078BD /* AppCore.framework */; };
+		E2306898BD598E4990896D96 /* AgentIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F37E35E581763819E68BDAC /* AgentIdentityTests.swift */; };
 		E96D4726CAD47A87C7737AAB /* CenteredPresentationTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C1B759133029B75F6A0C1 /* CenteredPresentationTransformTests.swift */; };
 		EE66D901F277DFCB13A28147 /* FolderMergeGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9767D0A08F96D59C5C5CADBA /* FolderMergeGeometryTests.swift */; };
 		EEF56CA24A1A51814539B921 /* FolderMergeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E7FD796704693002A9F3E0 /* FolderMergeGeometry.swift */; };
@@ -290,6 +293,7 @@
 		22E8F1C327B3DF6B11EB30C8 /* LaunchpadRootView+FolderRendering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchpadRootView+FolderRendering.swift"; sourceTree = "<group>"; };
 		248BF42F11806CFE3A523E77 /* LayoutConstraintSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutConstraintSolver.swift; sourceTree = "<group>"; };
 		24CC9F50A53E03C5C680B4FC /* LaunchpadRootView+DragMergeReflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchpadRootView+DragMergeReflow.swift"; sourceTree = "<group>"; };
+		252D8567CD0A8C40A1E286CF /* AgentIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentIdentity.swift; sourceTree = "<group>"; };
 		2554149A600ADA00DEC4FEEB /* LauncherDragPreviewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherDragPreviewState.swift; sourceTree = "<group>"; };
 		274C1B759133029B75F6A0C1 /* CenteredPresentationTransformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredPresentationTransformTests.swift; sourceTree = "<group>"; };
 		29078E0376E2BEB2164E40E6 /* GridSelectionNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSelectionNavigator.swift; sourceTree = "<group>"; };
@@ -325,6 +329,7 @@
 		6A4BD30C2540632E8CE677B9 /* DisplayCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DisplayCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C44B52EF2B9B903415E3B0D /* LaunchpadRootView+FolderPageSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchpadRootView+FolderPageSwipe.swift"; sourceTree = "<group>"; };
 		6E845D84BEF11ED0AFF9D54A /* DisplayContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayContext.swift; sourceTree = "<group>"; };
+		6F37E35E581763819E68BDAC /* AgentIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentIdentityTests.swift; sourceTree = "<group>"; };
 		701F41DC8945D45AD8D0D047 /* LaunchpadSearchComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadSearchComponents.swift; sourceTree = "<group>"; };
 		722BA453A2618640B71DE450 /* ResolvedLaunchpadItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolvedLaunchpadItem.swift; sourceTree = "<group>"; };
 		7A9E0542CC12B3F26036DB9B /* LayoutTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutTokens.swift; sourceTree = "<group>"; };
@@ -469,6 +474,7 @@
 		5E83D4447A4EB752F39955F9 /* AppCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				6F37E35E581763819E68BDAC /* AgentIdentityTests.swift */,
 				C26399335285081BC0591AF3 /* AppCatalogActorTests.swift */,
 				5B23924FE2182F28063E3CA5 /* ApplicationIdentityTests.swift */,
 				CBD1C0385F80D082D0CCD77E /* AppUpdatesTests.swift */,
@@ -504,6 +510,7 @@
 		740E30F70926E336C6FD0FC2 /* AppCore */ = {
 			isa = PBXGroup;
 			children = (
+				252D8567CD0A8C40A1E286CF /* AgentIdentity.swift */,
 				D9E7D80510EA8102A8826198 /* AppCatalogActor.swift */,
 				3B7DFFC54C4EF8D63F6B02B1 /* AppDiscoverySource.swift */,
 				0F06C3442913328190957C2B /* ApplicationIdentity.swift */,
@@ -900,6 +907,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				336BCB91EA220953E3A7F674 /* AgentIdentity.swift in Sources */,
 				B5A02A06350BD740A25D940D /* AppCatalogActor.swift in Sources */,
 				774BADB0A73B1BD0EAC17AF2 /* AppDiscoverySource.swift in Sources */,
 				F68847CBB3136847A43C82F8 /* AppMetadataResolver.swift in Sources */,
@@ -1012,6 +1020,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C2575364C0A3B22744C8FD8 /* AgentIdentity.swift in Sources */,
 				16A3A741F273DC8735B47534 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1020,6 +1029,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2306898BD598E4990896D96 /* AgentIdentityTests.swift in Sources */,
 				1729883D4D528AABF7BC8008 /* AppCatalogActorTests.swift in Sources */,
 				042762A1C5A52AE237C3B282 /* AppUpdatesTests.swift in Sources */,
 				571C35B813747F166DD93B72 /* ApplicationIdentityTests.swift in Sources */,
@@ -1178,7 +1188,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPadAgent;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -1188,7 +1198,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPadAgent;
 				PRODUCT_NAME = OpenLaunchPadAgent;
 				SDKROOT = macosx;
@@ -1328,7 +1338,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPadAgent;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -1338,7 +1348,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPadAgent;
 				PRODUCT_NAME = OpenLaunchPadAgent;
 				SDKROOT = macosx;
@@ -1480,7 +1490,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/OpenLaunchPad-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPad;
@@ -1491,7 +1501,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				OPENLAUNCHPAD_FEED_URL = "https://github.com/LuckyFishOno/OpenLaunchPad/releases/latest/download/appcast.xml";
 				OPENLAUNCHPAD_UPDATE_KEY = "V7ZKmhKGahfyCdqHRsoyJHMCzGgb1VwBLqS1p+buoj8=";
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPad;
@@ -1529,7 +1539,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/OpenLaunchPad-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPad;
@@ -1540,7 +1550,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				OPENLAUNCHPAD_FEED_URL = "https://github.com/LuckyFishOno/OpenLaunchPad/releases/latest/download/appcast.xml";
 				OPENLAUNCHPAD_UPDATE_KEY = "V7ZKmhKGahfyCdqHRsoyJHMCzGgb1VwBLqS1p+buoj8=";
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPad;
