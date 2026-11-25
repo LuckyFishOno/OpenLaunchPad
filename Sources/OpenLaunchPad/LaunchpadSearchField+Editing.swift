@@ -1,3 +1,4 @@
+import AppCore
 import AppKit
 import QuartzCore
 
@@ -212,12 +213,21 @@ extension LaunchpadSearchField {
 
     @objc func clearButtonPressed() { clearSearch() }
 
+    /// Hidden when this copy cannot update itself; disabled during an update.
+    func refreshUpdateMenuItem() {
+        updateMenuItem.isHidden = !AppUpdates.shared.isAvailable
+        updateMenuItem.isEnabled = AppUpdates.shared.canCheck
+    }
+
     @objc func settingsButtonPressed() {
+        refreshUpdateMenuItem()
         let menuOrigin = NSPoint(
             x: settingsButton.frame.maxX - settingsMenu.size.width,
             y: settingsButton.frame.minY - Metrics.accessorySpacing)
         settingsMenu.popUp(positioning: nil, at: menuOrigin, in: self)
     }
+
+    @objc func checkForUpdatesMenuItemPressed() { onCheckForUpdatesRequested?() }
 
     @objc func resetLaunchpadMenuItemPressed() { onResetRequested?() }
 }

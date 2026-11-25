@@ -191,12 +191,24 @@ remain at root. Existing persisted layouts remain authoritative; an incomplete
 first scan is displayed without being persisted so a later complete scan can
 still construct the full default. Reset uses the same builder.
 
-The search field's trailing ellipsis is a native button with one menu command,
-`Reset Launchpad`. The button is outside the translated search-content layer, so
+The search field's trailing ellipsis is a native button whose menu holds
+`Check for Updates` and `Reset Launchpad`. The button is outside the translated search-content layer, so
 it cannot shift the centered magnifier/placeholder. Reset requires confirmation,
 refreshes discovery, and is refused when discovery is partial. A successful
 transaction removes custom folders and page boundaries, rebuilds the canonical
 default including Utilities, then returns the UI to page one.
+
+## Updates
+
+`AppUpdates` (AppCore) is the menu's view of the updater and does not link
+Sparkle. `SparkleUpdates` connects it in the agent target only. The agent hosts
+the updater, but Sparkle replaces the outer `OpenLaunchPad.app`, whose Info.plist
+carries the feed and public key, and then reopens the embedded agent. Scheduled
+checks are off, and Sparkle starts on the first manual check. Because the
+full-screen launcher covers Sparkle's windows, the check starts after the launcher
+has closed, and the previous application returns when the session ends. The
+command is hidden when the agent is not embedded or no update key is configured.
+See [Releasing](RELEASING.md).
 
 ## Project Generation
 

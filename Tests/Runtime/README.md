@@ -176,6 +176,15 @@ Compile it using the same command as `CrossPageDragCheck.swift`, replacing that
 source filename and output name with `ResetLaunchpadCheck.swift` and
 `reset-launchpad-check`. Success ends with `RESET LAUNCHPAD: 0 failures`.
 
+## Check for Updates
+
+`UpdateCheck.swift` drives the real menu command with a stand-in updater. It checks
+that the command is hidden without an updater, that a check starts only after the
+launcher has closed, that the agent yields when the session ends, and that an
+ordinary dismissal or reopening does not start a check. Compile it like
+`ResetLaunchpadCheck.swift`. Success ends with `UPDATE CHECK: 0 failures`. It does
+not cover Sparkle's download and installation.
+
 ## Wallpaper and memory
 
 These checks work with the Release frameworks built into `Builds`. They never

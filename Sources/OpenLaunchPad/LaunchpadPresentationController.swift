@@ -1,3 +1,4 @@
+import AppCore
 import AppKit
 import DisplayCore
 
@@ -13,6 +14,10 @@ final class LaunchpadWindowController: NSWindowController {
 
     private var previousFrontmostApplication:
         NSRunningApplication?
+
+    /// Sparkle's windows sit below the full-screen launcher, so a check starts
+    /// only after the launcher has closed.
+    private var checksForUpdatesAfterHiding = false
 
     convenience init() {
         let screen =
@@ -67,8 +72,24 @@ final class LaunchpadWindowController: NSWindowController {
             (self.window?.contentView as? LaunchpadRootView)?
                 .releasePresentationResourcesForIdle()
 
+            // Stay active for Sparkle's window. The previous application comes
+            // back when the update session ends.
+            if self.checksForUpdatesAfterHiding {
+                self.checksForUpdatesAfterHiding = false
+                AppUpdates.shared.check()
+                return
+            }
+
             self
                 .restorePreviousFrontmostApplicationIfNeeded()
+        }
+
+        (window.contentView as? LaunchpadRootView)?.onUpdateCheckRequested = { [weak self] in
+            self?.closeAndCheckForUpdates()
+        }
+        AppUpdates.shared.onSessionFinished = { [weak self] in
+            guard let self, (self.window as? LaunchpadWindow)?.isPresentedOrPresenting != true else { return }
+            self.restorePreviousFrontmostApplicationIfNeeded()
         }
 
         observePresentationChanges()
@@ -155,6 +176,12 @@ final class LaunchpadWindowController: NSWindowController {
         }
     }
 
+    private func closeAndCheckForUpdates() {
+        guard let window = window as? LaunchpadWindow else { return }
+        checksForUpdatesAfterHiding = true
+        window.dismiss()
+    }
+
     func restoreSystemPresentationForTermination() {
         menuBarBackdrop.dismiss()
     }
@@ -171,6 +198,8 @@ final class LaunchpadWindowController: NSWindowController {
         else {
             return
         }
+
+        checksForUpdatesAfterHiding = false
 
         // Reset only on a new opening, not on live display changes or an
         // activation request while already visible. Do it before ordering front

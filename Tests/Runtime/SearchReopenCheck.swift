@@ -109,8 +109,8 @@ final class SearchReopenCheckDelegate: NSObject, NSApplicationDelegate {
             check(settingsButton != nil, "settings button exists")
             check(abs((settingsButton?.frame.maxX ?? 0) - (search.bounds.maxX - 10)) <= 1,
                   "settings button is at the search field's right edge")
-            check(settingsButton?.menu?.items.map(\.title) == ["Reset Launchpad"],
-                  "settings menu has only Reset Launchpad")
+            check(settingsButton?.menu?.items.filter { !$0.isHidden }.map(\.title) == ["Reset Launchpad"],
+                  "settings menu has only Reset Launchpad without an updater")
             input("saf")
             check(search.stringValue == "saf", "partial search entered")
             check(descendants(root).filter { $0 is AppTileButton }.count < initialTileCount,

@@ -12,4 +12,5 @@ let delegate = OpenLaunchPadAppDelegate()
 
 application.delegate = delegate
 application.setActivationPolicy(.accessory)
+SparkleUpdates.connect()
 application.run()

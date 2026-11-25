@@ -14,6 +14,11 @@ settings:
     CLANG_ENABLE_MODULES: YES
     MACOSX_DEPLOYMENT_TARGET: "15.0"
 
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.10.1
+
 targets:
   AppCore:
     type: framework
@@ -74,12 +79,13 @@ targets:
       - target: AppCore
       - target: DisplayCore
       - target: LayoutCore
+      - package: Sparkle
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.OpenLaunchPadAgent
         PRODUCT_NAME: OpenLaunchPadAgent
-        MARKETING_VERSION: "1.1"
-        CURRENT_PROJECT_VERSION: 2
+        MARKETING_VERSION: "1.2"
+        CURRENT_PROJECT_VERSION: 3
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: OpenLaunchPadAgent
         INFOPLIST_KEY_LSUIElement: YES
@@ -106,10 +112,16 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.OpenLaunchPad
         PRODUCT_NAME: OpenLaunchPad
-        MARKETING_VERSION: "1.1"
-        CURRENT_PROJECT_VERSION: 2
+        MARKETING_VERSION: "1.2"
+        CURRENT_PROJECT_VERSION: 3
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: OpenLaunchPad
+        # Custom keys merged into the generated Info.plist. Installed copies read
+        # updates from this feed and accept only downloads signed with the
+        # private half of this key (docs/RELEASING.md).
+        INFOPLIST_FILE: Config/OpenLaunchPad-Info.plist
+        OPENLAUNCHPAD_FEED_URL: https://github.com/LuckyFishOno/OpenLaunchPad/releases/latest/download/appcast.xml
+        OPENLAUNCHPAD_UPDATE_KEY: "V7ZKmhKGahfyCdqHRsoyJHMCzGgb1VwBLqS1p+buoj8="
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
         INFOPLIST_KEY_LSUIElement: YES

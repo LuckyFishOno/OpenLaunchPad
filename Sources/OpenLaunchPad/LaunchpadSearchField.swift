@@ -15,6 +15,7 @@ import QuartzCore
     let clearButton = NSButton()
     let settingsButton = NSButton()
     let settingsMenu = NSMenu()
+    let updateMenuItem = NSMenuItem()
 
     let placeholder = NSAttributedString(
         string: "Search",
@@ -37,6 +38,7 @@ import QuartzCore
 
     var onTextChanged: (() -> Void)?
     var onCancel: (() -> Void)?
+    var onCheckForUpdatesRequested: (() -> Void)?
     var onResetRequested: (() -> Void)?
 
     var stringValue: String {

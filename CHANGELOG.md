@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2 (build 3) — 2026-11-25
+
+### Added
+
+- **Check for Updates** in the search field's menu. It closes the launcher, then
+  downloads, verifies, and installs a newer release with Sparkle. Nothing is
+  contacted until the command is chosen.
+- Copies of 1.1 and earlier have no updater. Install 1.2 by hand once.
+
+### Validation
+
+- 201 deterministic core tests passed, including the update cases.
+- A test build updated itself with Sparkle: download, signature check,
+  installation, and relaunch of the embedded agent.
+- Apple silicon Release build and deep signature verification passed.
+
+### 繁體中文
+
+- 搜尋欄選單新增 **Check for Updates**：收起啟動器後，以 Sparkle 下載、驗證並安裝新版本。
+  只有點選時才會連線。
+- 1.1 及更早的版本沒有更新功能，需要先手動安裝一次 1.2。
+
 ## 1.1 (build 2) — 2026-11-12
 
 ### Fixed

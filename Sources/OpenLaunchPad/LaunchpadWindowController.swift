@@ -96,6 +96,8 @@ import QuartzCore
             hasFolderDrag: folderItemDragSession != nil, hasFolderCommit: openFolderID != nil && isCommittingLayout)
     }
 
+    var onUpdateCheckRequested: (() -> Void)?
+
     private var hasLoadedApplications = false
     var isLoadingApplications = true
 
@@ -285,6 +287,7 @@ import QuartzCore
         setAccessibilityLabel("OpenLaunchPad")
         searchField.onTextChanged = { [weak self] in self?.searchDidChange() }
         searchField.onCancel = { [weak self] in self?.requestClose() }
+        searchField.onCheckForUpdatesRequested = { [weak self] in self?.requestUpdateCheck() }
         searchField.onResetRequested = { [weak self] in self?.confirmResetLaunchpad() }
         addSubview(searchField)
     }
@@ -1040,6 +1043,16 @@ extension LaunchpadRootView {
         guard !suppressesResignActiveDismissal else { return }
         cancelDragInteraction(animated: false)
         (window as? LaunchpadWindow)?.dismiss()
+    }
+
+    fileprivate func requestUpdateCheck() {
+        guard !isResettingLayout, dragSession == nil, !isCommittingLayout, !isFinishingDragVisuals,
+            !suppressesResignActiveDismissal
+        else {
+            NSSound.beep()
+            return
+        }
+        onUpdateCheckRequested?()
     }
 
     fileprivate func confirmResetLaunchpad() {

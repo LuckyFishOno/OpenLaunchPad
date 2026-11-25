@@ -4,7 +4,7 @@
 
 **為現代 macOS 打造，快速、原生的 Launchpad 風格應用程式啟動器。**
 
-目前版本：**OpenLaunchPad 1.1（build 2）**。
+目前版本：**OpenLaunchPad 1.2（build 3）**。
 
 OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格，支援即時搜尋、資料夾、拖放整理與流暢翻頁。專案開源，以本機運作為優先，使用 Swift、AppKit 與 Core Animation 開發。
 
@@ -64,6 +64,7 @@ OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格�
 - 支援多顯示器與不同縮放比例
 - 支援輔助使用語意、鍵盤導覽、由右至左的版面與「減少動態效果」
 - 可重置為預設啟動器版面
+- 從搜尋欄選單的 **Check for Updates** 直接更新 App
 
 ## 系統需求
 
@@ -142,7 +143,7 @@ swift test --filter FolderMergeGeometryTests
 swift test --filter LauncherLayoutStoreTests/testReconcileAndCommitAppendsNewApplicationsToExistingLayout
 ```
 
-核心測試套件目前包含 195 項確定性測試。視窗、桌布、搜尋、翻頁、拖曳與選單列動畫的 AppKit runtime 檢查方式，請參閱 [Tests/Runtime/README.md](Tests/Runtime/README.md)。
+核心測試套件目前包含 201 項確定性測試。視窗、桌布、搜尋、翻頁、拖曳與選單列動畫的 AppKit runtime 檢查方式，請參閱 [Tests/Runtime/README.md](Tests/Runtime/README.md)。
 
 ## 本機資料與隱私
 
@@ -154,7 +155,7 @@ OpenLaunchPad 將排列保存在本機：
 
 首次開啟時，OpenLaunchPad 會自動匯入相容的既有排列，並保留原始檔案。上述位置若已有排列，會優先使用該檔案。
 
-OpenLaunchPad 不需要帳號，也不會傳送分析或遙測資料。你的排列資料會留在 Mac 上。
+OpenLaunchPad 不需要帳號，也不會傳送分析或遙測資料。你的排列資料會留在 Mac 上。只有在你點選 **Check for Updates** 時才會連線，向 GitHub 查詢最新版本。
 
 ## 架構
 

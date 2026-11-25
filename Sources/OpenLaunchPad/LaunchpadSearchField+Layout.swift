@@ -227,6 +227,11 @@ extension LaunchpadSearchField {
         settingsButton.setAccessibilityLabel("Launchpad settings")
 
         settingsMenu.autoenablesItems = false
+        updateMenuItem.title = "Check for Updates"
+        updateMenuItem.action = #selector(checkForUpdatesMenuItemPressed)
+        updateMenuItem.target = self
+        settingsMenu.addItem(updateMenuItem)
+        refreshUpdateMenuItem()
         let resetItem = NSMenuItem(
             title: "Reset Launchpad", action: #selector(resetLaunchpadMenuItemPressed), keyEquivalent: "")
         resetItem.target = self

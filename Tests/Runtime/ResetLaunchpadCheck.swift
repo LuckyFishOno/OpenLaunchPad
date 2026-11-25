@@ -70,7 +70,7 @@ final class ResetLaunchpadCheckDelegate: NSObject, NSApplicationDelegate {
         let search = descendants(root).compactMap { $0 as? LaunchpadSearchField }.first!
         let settings = descendants(search).compactMap { $0 as? NSButton }.first { $0.menu != nil }!
 
-        settings.menu!.performActionForItem(at: 0)
+        settings.menu!.performActionForItem(at: settings.menu!.indexOfItem(withTitle: "Reset Launchpad"))
         if await until("confirmation sheet opens", { alertButton(titled: "Cancel") != nil }) {
             alertButton(titled: "Cancel")?.performClick(nil)
             await until("cancel closes confirmation") {
@@ -81,7 +81,7 @@ final class ResetLaunchpadCheckDelegate: NSObject, NSApplicationDelegate {
             check(try storedDocument() == fixture, "cancel preserves the exact layout")
         }
 
-        settings.menu!.performActionForItem(at: 0)
+        settings.menu!.performActionForItem(at: settings.menu!.indexOfItem(withTitle: "Reset Launchpad"))
         if await until("reset confirmation opens", { alertButton(titled: "Reset Launchpad") != nil }) {
             alertButton(titled: "Reset Launchpad")?.performClick(nil)
             await until("reset transaction finishes") {

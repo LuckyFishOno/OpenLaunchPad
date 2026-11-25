@@ -25,3 +25,14 @@ build.log
 *.tmp
 *.orig
 *~
+
+# Website (local only, not tracked)
+/web/
+
+# Agent workspace configuration (local only)
+/.agent-memory/
+/.agents/
+/.claude/
+/.trail/
+/AGENTS.md
+/CLAUDE.md
