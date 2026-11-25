@@ -120,7 +120,9 @@ final class UpdateCheckDelegate: NSObject, NSApplicationDelegate {
 @MainActor
 struct UpdateCheck {
     static func main() {
-        guard ProcessInfo.processInfo.environment["OPENLAUNCHPAD_LAYOUT_PATH"]?.hasPrefix("/private/tmp/") == true else {
+        guard
+            ProcessInfo.processInfo.environment["OPENLAUNCHPAD_LAYOUT_PATH"]?.hasPrefix("/private/tmp/") == true
+        else {
             fatalError("Set OPENLAUNCHPAD_LAYOUT_PATH inside /private/tmp")
         }
         let application = NSApplication.shared

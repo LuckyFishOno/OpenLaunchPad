@@ -60,30 +60,8 @@ final class LaunchpadWindowController: NSWindowController {
             display.displayID
 
         window.onDidHide = { [weak self] in
-
-            guard let self else {
-                return
-            }
-
-            self.menuBarBackdrop.dismiss()
-
-            // The window is fully ordered out at this point. Drop decoded
-            // Retina icons and compositor page trees while the agent is idle.
-            (self.window?.contentView as? LaunchpadRootView)?
-                .releasePresentationResourcesForIdle()
-
-            // Stay active for Sparkle's window. The previous application comes
-            // back when the update session ends.
-            if self.checksForUpdatesAfterHiding {
-                self.checksForUpdatesAfterHiding = false
-                AppUpdates.shared.check()
-                return
-            }
-
-            self
-                .restorePreviousFrontmostApplicationIfNeeded()
+            self?.launcherDidHide()
         }
-
         (window.contentView as? LaunchpadRootView)?.onUpdateCheckRequested = { [weak self] in
             self?.closeAndCheckForUpdates()
         }
@@ -93,6 +71,25 @@ final class LaunchpadWindowController: NSWindowController {
         }
 
         observePresentationChanges()
+    }
+
+    private func launcherDidHide() {
+        menuBarBackdrop.dismiss()
+
+        // The window is fully ordered out at this point. Drop decoded
+        // Retina icons and compositor page trees while the agent is idle.
+        (window?.contentView as? LaunchpadRootView)?
+            .releasePresentationResourcesForIdle()
+
+        // Stay active for Sparkle's window. The previous application comes
+        // back when the update session ends.
+        if checksForUpdatesAfterHiding {
+            checksForUpdatesAfterHiding = false
+            AppUpdates.shared.check()
+            return
+        }
+
+        restorePreviousFrontmostApplicationIfNeeded()
     }
 
     private func observePresentationChanges() {
