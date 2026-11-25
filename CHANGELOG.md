@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.3 (build 6) — 2026-11-26
+
+The app behaves as in 1.2.2. This release corrects a test.
+
+### Fixed
+
+- The reset check no longer fails when OpenLaunchPad is installed. It now uses the
+  launcher's own list of apps. **Reset Launchpad** itself was correct.
+
+### Validation
+
+- All 219 deterministic core tests passed.
+- The reset check passed, and it detects three deliberately broken resets.
+- Apple silicon Release build and deep signature verification passed.
+
+### 繁體中文
+
+- App 的行為與 1.2.2 相同，這一版只修正測試。
+- 已安裝 OpenLaunchPad 時，重設檢查不會再誤報失敗。**Reset Launchpad** 功能本身一直正常。
+
 ## 1.2.2 (build 5) — 2026-11-25
 
 ### Fixed
