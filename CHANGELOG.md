@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.2 (build 5) — 2026-11-25
 
 ### Fixed
 
@@ -20,6 +20,7 @@
 - All 219 deterministic core tests passed.
 - The new catalog refresh check passed, and the existing drag, folder, paging, icon,
   search, and update checks still pass.
+- Apple silicon Release build and deep signature verification passed.
 
 ### 繁體中文
 

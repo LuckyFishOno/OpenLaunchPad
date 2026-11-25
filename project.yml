@@ -84,8 +84,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.OpenLaunchPadAgent
         PRODUCT_NAME: OpenLaunchPadAgent
-        MARKETING_VERSION: "1.2.1"
-        CURRENT_PROJECT_VERSION: 4
+        MARKETING_VERSION: "1.2.2"
+        CURRENT_PROJECT_VERSION: 5
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: OpenLaunchPadAgent
         INFOPLIST_KEY_LSUIElement: YES
@@ -113,8 +113,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.openlaunchpad.OpenLaunchPad
         PRODUCT_NAME: OpenLaunchPad
-        MARKETING_VERSION: "1.2.1"
-        CURRENT_PROJECT_VERSION: 4
+        MARKETING_VERSION: "1.2.2"
+        CURRENT_PROJECT_VERSION: 5
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: OpenLaunchPad
         # Custom keys merged into the generated Info.plist. Installed copies read

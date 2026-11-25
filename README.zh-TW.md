@@ -4,7 +4,7 @@
 
 **為現代 macOS 打造，快速、原生的 Launchpad 風格應用程式啟動器。**
 
-目前版本：**OpenLaunchPad 1.2.1（build 4）**。
+目前版本：**OpenLaunchPad 1.2.2（build 5）**。
 
 OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格，支援即時搜尋、資料夾、拖放整理與流暢翻頁。專案開源，以本機運作為優先，使用 Swift、AppKit 與 Core Animation 開發。
 

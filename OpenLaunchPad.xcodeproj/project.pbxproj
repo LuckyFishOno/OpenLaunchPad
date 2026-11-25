@@ -1224,7 +1224,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPadAgent;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -1234,7 +1234,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPadAgent;
 				PRODUCT_NAME = OpenLaunchPadAgent;
 				SDKROOT = macosx;
@@ -1374,7 +1374,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPadAgent;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -1384,7 +1384,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPadAgent;
 				PRODUCT_NAME = OpenLaunchPadAgent;
 				SDKROOT = macosx;
@@ -1526,7 +1526,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/OpenLaunchPad-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPad;
@@ -1537,7 +1537,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				OPENLAUNCHPAD_FEED_URL = "https://github.com/LuckyFishOno/OpenLaunchPad/releases/latest/download/appcast.xml";
 				OPENLAUNCHPAD_UPDATE_KEY = "V7ZKmhKGahfyCdqHRsoyJHMCzGgb1VwBLqS1p+buoj8=";
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPad;
@@ -1575,7 +1575,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/OpenLaunchPad-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenLaunchPad;
@@ -1586,7 +1586,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				OPENLAUNCHPAD_FEED_URL = "https://github.com/LuckyFishOno/OpenLaunchPad/releases/latest/download/appcast.xml";
 				OPENLAUNCHPAD_UPDATE_KEY = "V7ZKmhKGahfyCdqHRsoyJHMCzGgb1VwBLqS1p+buoj8=";
 				PRODUCT_BUNDLE_IDENTIFIER = org.openlaunchpad.OpenLaunchPad;
