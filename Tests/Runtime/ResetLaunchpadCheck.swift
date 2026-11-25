@@ -2,6 +2,7 @@
 // The layout path must point into /private/tmp so user data is never touched.
 import AppCore
 import AppKit
+import DisplayCore
 
 @MainActor
 final class ResetLaunchpadCheckDelegate: NSObject, NSApplicationDelegate {
@@ -49,8 +50,15 @@ final class ResetLaunchpadCheckDelegate: NSObject, NSApplicationDelegate {
         return descendants(content).compactMap { $0 as? NSButton }.first { $0.title == title }
     }
 
+    /// The launcher's own catalog, which leaves out OpenLaunchPad itself. A view
+    /// without a window neither loads nor saves anything.
+    private func launcherCatalog() -> AppCatalogActor {
+        let display = DisplayContext(displayID: 0, frame: .zero, visibleFrame: .zero, backingScaleFactor: 1)
+        return LaunchpadRootView(frame: .zero, displayContext: display).catalog
+    }
+
     private func run() async throws {
-        let discovery = await AppCatalogActor().refreshOutcome()
+        let discovery = await launcherCatalog().refreshOutcome()
         precondition(discovery.completeness == .complete && discovery.applications.count >= 3)
         let references = discovery.applications.map(LauncherApplicationReference.init(application:))
         let folder = LauncherFolder(applications: Array(references.prefix(2)))
