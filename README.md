@@ -35,11 +35,22 @@ OpenLaunchPad gives Apple silicon Macs a familiar full-screen app grid with inst
 ## See OpenLaunchPad in action
 
 <p align="center">
-  <img src="docs/assets/openlaunchpad-demo-20261018.gif" width="1200" alt="OpenLaunchPad live search, folder opening, drag-and-drop reordering, and page navigation demo" />
+  <img src="docs/assets/openlaunchpad-demo-20261125.gif" width="1000" alt="OpenLaunchPad live search, folder opening, drag-and-drop reordering, page navigation, and update check demo" />
 </p>
 
-A 10-second tour: search, open folders, reorder apps, and move between pages.
-Captured from the real app using an isolated demo layout.
+A 20-second tour: search, open folders, reorder apps, move between pages, and check for updates.
+Captured from the real app using an isolated demo layout and a local test update feed.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/assets/openlaunchpad-search-20261125.jpg" alt="Type to search installed apps" /><br />Type to search installed apps</td>
+    <td width="50%"><img src="docs/assets/openlaunchpad-folder-20261125.jpg" alt="Open a folder in place" /><br />Open a folder in place</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/assets/openlaunchpad-drag-20261125.jpg" alt="Drag an app to reorder the grid" /><br />Drag an app to reorder the grid</td>
+    <td width="50%"><img src="docs/assets/openlaunchpad-update-menu-20261125.jpg" alt="Check for Updates in the search field menu" /><br />Check for Updates in the search field menu</td>
+  </tr>
+</table>
 
 ## Why use it?
 

@@ -35,10 +35,21 @@ OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格�
 ## 操作示範
 
 <p align="center">
-  <img src="docs/assets/openlaunchpad-demo-20261018.gif" width="1200" alt="OpenLaunchPad 即時搜尋、開啟資料夾、拖放排序與翻頁示範" />
+  <img src="docs/assets/openlaunchpad-demo-20261125.gif" width="1000" alt="OpenLaunchPad 即時搜尋、開啟資料夾、拖放排序、翻頁與檢查更新示範" />
 </p>
 
-10 秒看完搜尋、開啟資料夾、拖放整理與翻頁。畫面使用獨立的示範版面，直接從實際執行的應用程式錄製。
+20 秒看完搜尋、開啟資料夾、拖放整理、翻頁與檢查更新。畫面使用獨立的示範版面與本機測試更新來源，直接從實際執行的應用程式錄製。
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/assets/openlaunchpad-search-20261125.jpg" alt="輸入名稱即可搜尋" /><br />輸入名稱即可搜尋</td>
+    <td width="50%"><img src="docs/assets/openlaunchpad-folder-20261125.jpg" alt="開啟資料夾" /><br />開啟資料夾</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/assets/openlaunchpad-drag-20261125.jpg" alt="拖曳 App 調整順序" /><br />拖曳 App 調整順序</td>
+    <td width="50%"><img src="docs/assets/openlaunchpad-update-menu-20261125.jpg" alt="搜尋欄選單的 Check for Updates" /><br />搜尋欄選單的 Check for Updates</td>
+  </tr>
+</table>
 
 ## 為什麼使用 OpenLaunchPad？
 
