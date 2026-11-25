@@ -16,7 +16,7 @@ Persisted layout state ────────────────┘
 
 `AppCore` owns application identity and metadata, catalog discovery, local search, persisted launcher layout, reconciliation, drag-and-drop interaction state, and deterministic paging motion/input models.
 
-Application discovery and user layout are intentionally separate. A temporary discovery failure must not silently rewrite the user's persisted arrangement.
+Application discovery and user layout are intentionally separate. A temporary discovery failure must not silently rewrite the user's persisted arrangement. See [Catalog Changes](#catalog-changes).
 
 ### DisplayCore
 
@@ -179,6 +179,31 @@ constructs the production launcher and top-continuation windows and verifies
 their synchronized opening animations, display-top overlap, and Reduce Motion
 path. These checks do not measure compositor frame pacing or replace manual
 physical-device testing.
+
+## Catalog Changes
+
+`ApplicationDirectoryMonitor` watches the application folders and their subfolders
+with FSEvents, including folders that do not exist yet. `ApplicationDirectoryChange`
+ignores files that applications write inside their own bundles.
+
+`ApplicationRecord.contentStamp` identifies the bundle and its Info.plist, so an
+update at the same path makes a different record and a different icon cache key.
+`Bundle` keeps the first metadata it reads for a path. `AppMetadataResolver`
+therefore uses it only while the stamp is unchanged and otherwise reads the files
+with `BundleInfoReader`, in the language `Bundle` would use.
+
+Updaters remove an application before its replacement appears. After a complete
+scan, `LauncherLayoutStore` keeps the reference of a missing application for
+`defaultMissingApplicationGrace` (`MissingApplicationLedger`), then removes it at
+the scan requested through `reviewDelay`. A folder shows its remaining application
+meanwhile. Because saved folders can hold unresolved references, a visible folder
+slot is mapped through `ResolvedLaunchpadInsertionIndex` before it is saved.
+
+`LaunchpadRootView+CatalogRefresh` applies a scan only when no drag, commit, reset,
+page transition, or open folder would be disturbed, and only when something
+changed. A save that fails restores the draft's snapshot, unless the store has
+advanced: then the stored layout is used, because a stale revision could never be
+saved again. `CatalogRefreshCheck.swift` drives these cases on the real root view.
 
 ## Accessibility and Input
 

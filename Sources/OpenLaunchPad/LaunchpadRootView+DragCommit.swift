@@ -27,9 +27,8 @@ extension LaunchpadRootView {
             _ = dragInteraction.beginRollback()
             if committingSession.folderCreationPreview != nil { closeFolder(animated: false) }
             committingSession.draft.rollback()
-            layoutDocument = committingSession.draft.snapshot
+            await restoreLayout(afterFailedSaveFrom: committingSession.draft.snapshot)
             restoreSnapshotUI(afterFailedCommit: committingSession)
-            invalidatePageSurfaceCache()
             NSSound.beep()
             // Restoring the original surface also terminates the visual
             // landing, so a stale Core Animation completion must not keep

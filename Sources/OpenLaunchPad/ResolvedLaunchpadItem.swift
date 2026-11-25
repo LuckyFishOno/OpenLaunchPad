@@ -199,7 +199,9 @@ enum ResolvedLaunchpadItemFactory {
                 let applications = folder.applications.compactMap {
                     applicationsByIdentity[$0.identity]
                 }
-                guard applications.count >= 2 else { return nil }
+                // A saved folder has at least two references. While one of them
+                // is being replaced, the other must not vanish from the grid.
+                guard !applications.isEmpty else { return nil }
                 return .folder(ResolvedLaunchpadFolder(
                     id: folder.id,
                     title: resolvedFolderTitle(folder.customTitle),

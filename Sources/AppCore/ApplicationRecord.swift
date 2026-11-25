@@ -5,17 +5,21 @@ public struct ApplicationRecord: Identifiable, Codable, Hashable, Sendable {
     public let displayName: String
     public let bundleIdentifier: String?
     public let bundleURL: URL
+    /// Differs after the application was replaced at the same path. Nil when unknown.
+    public let contentStamp: ApplicationContentStamp?
 
     public init(
         displayName: String,
         bundleIdentifier: String?,
-        bundleURL: URL
+        bundleURL: URL,
+        contentStamp: ApplicationContentStamp? = nil
     ) {
         let normalizedURL = bundleURL.standardizedFileURL
         id = ApplicationIdentity(bundleIdentifier: bundleIdentifier, bundleURL: normalizedURL)
         self.displayName = displayName
         self.bundleIdentifier = bundleIdentifier
         self.bundleURL = normalizedURL
+        self.contentStamp = contentStamp
     }
 
     public func matches(query: String) -> Bool {

@@ -38,6 +38,16 @@ session and temporarily brings a test launcher window forward. It uses a
 temporary layout file and restores the previous foreground application when
 finished. It does not inject global events or require Accessibility permission.
 
+## Catalog changes while the launcher is in use
+
+`CatalogRefreshCheck.swift` compiles alongside the real UI sources and keeps its
+window hidden. It checks that a refresh leaves an open folder and an active drag
+alone and is applied afterwards, that a drag works again after a save conflict,
+that a folder keeps showing its remaining application, that a pinned icon follows
+updated artwork, and that the directory monitor notices subfolders. Set
+`OPENLAUNCHPAD_LAYOUT_PATH` inside `/private/tmp`. Fixtures are created next to it;
+the application folders are only read.
+
 ## Menu-bar opening animation
 
 `MenuBarOpeningAnimationCheck.swift` constructs the production

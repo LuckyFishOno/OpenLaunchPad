@@ -92,8 +92,9 @@ extension LaunchpadRootView {
                 invalidatePageSurfaceCache()
                 if openFolderID == folderID { renderFolderOverlay(animated: false) } else { needsLayout = true }
             } catch {
+                await restoreLayout(afterFailedSaveFrom: draft.snapshot)
                 NSSound.beep()
-                if openFolderID == folderID { renderFolderOverlay(animated: false) }
+                if openFolderID == folderID { renderFolderOverlay(animated: false) } else { needsLayout = true }
             }
         }
     }

@@ -21,7 +21,8 @@ extension LaunchpadRootView {
         do {
             var candidate = try LauncherLayoutDraft(document: layoutDocument)
             try candidate.moveApplication(
-                sourceApplication.id, inFolder: context.folderID, toIndex: context.destinationAbsoluteIndex)
+                sourceApplication.id, inFolder: context.folderID,
+                toIndex: savedFolderIndex(for: context, moving: sourceApplication.id, in: geometry.folder))
             guard candidate.hasChanges else {
                 cancelFolderItemDragBeforeExit(animated: true)
                 return
@@ -62,6 +63,25 @@ extension LaunchpadRootView {
             await persistFolderReorder(
                 context, draft: draft, landingStartMediaTime: landingStartMediaTime, landingDuration: landingDuration)
         }
+    }
+
+    /// A saved folder may hold references to applications that are not installed
+    /// right now, so a visible slot is not always the saved index.
+    private func savedFolderIndex(
+        for context: FolderItemDragSession, moving source: ApplicationIdentity, in folder: ResolvedLaunchpadFolder
+    ) -> Int {
+        let slot = context.destinationAbsoluteIndex
+        let saved = layoutDocument.items.lazy.compactMap { item -> LauncherFolder? in
+            guard case .folder(let candidate) = item, candidate.id == folder.id else { return nil }
+            return candidate
+        }.first
+        guard let saved,
+            let index = ResolvedLaunchpadInsertionIndex.resolve(
+                visibleSlot: slot, pageIdentifiers: saved.applications.map { .application($0.identity) },
+                visibleIdentifiers: folder.applications.map { .application($0.id) },
+                sourceIdentifier: .application(source))
+        else { return slot }
+        return index
     }
 
     func animateFolderReorderLanding(_ context: FolderItemDragSession, to destinationCenter: CGPoint) -> (
@@ -131,7 +151,7 @@ extension LaunchpadRootView {
             folderReorderCommit.finishImmediately(context)
             guard folderReorderCommit.consumeIfReady(context) else { return }
             _ = dragInteraction.beginRollback()
-            layoutDocument = draft.snapshot
+            await restoreLayout(afterFailedSaveFrom: draft.snapshot)
             folderPaging.selectPage(context.sourcePage)
             NSSound.beep()
             CATransaction.begin()

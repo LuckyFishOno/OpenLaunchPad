@@ -1,7 +1,8 @@
 import Foundation
 
 public enum LauncherCatalogCompleteness: Equatable, Sendable {
-    /// Every configured discovery source completed, so missing applications may be pruned.
+    /// Every configured discovery source completed, so missing applications may be pruned
+    /// once their place is no longer reserved.
     case complete
     /// At least one source failed or was unavailable. Missing references must be retained.
     case partial
@@ -45,6 +46,9 @@ public struct LauncherLayoutReconciliationReport: Equatable, Sendable {
 public struct LauncherLayoutReconciliationResult: Equatable, Sendable {
     public let document: LauncherLayoutDocument
     public let report: LauncherLayoutReconciliationReport
+    /// Seconds after which to scan again, because the place of a missing
+    /// application is reserved only for a while. Nil when none is missing.
+    public let reviewDelay: TimeInterval?
 
     public var changed: Bool {
         !report.addedApplications.isEmpty
@@ -57,23 +61,28 @@ public struct LauncherLayoutReconciliationResult: Equatable, Sendable {
 
     public init(
         document: LauncherLayoutDocument,
-        report: LauncherLayoutReconciliationReport
+        report: LauncherLayoutReconciliationReport,
+        reviewDelay: TimeInterval? = nil
     ) {
         self.document = document
         self.report = report
+        self.reviewDelay = reviewDelay
     }
 }
 
 public enum LauncherLayoutReconciler {
+    /// References in `reserving` keep their place although the catalog lacks them.
     public static func reconcile(
         _ document: LauncherLayoutDocument,
         with applications: [ApplicationRecord],
-        completeness: LauncherCatalogCompleteness = .complete
+        completeness: LauncherCatalogCompleteness = .complete,
+        reserving: Set<ApplicationIdentity> = []
     ) -> LauncherLayoutReconciliationResult {
         let catalog = uniqueCatalog(applications)
         var accumulator = ReconciliationAccumulator(
             catalog: catalog,
-            completeness: completeness
+            completeness: completeness,
+            reserving: reserving
         )
         let reconciledPages = accumulator.reconcile(document.pages)
 
@@ -96,6 +105,7 @@ public enum LauncherLayoutReconciler {
 private struct ReconciliationAccumulator {
     let catalog: [ApplicationRecord]
     let completeness: LauncherCatalogCompleteness
+    let reserving: Set<ApplicationIdentity>
     let catalogIdentities: Set<ApplicationIdentity>
     let pathAliases: [ApplicationIdentity: ApplicationIdentity]
 
@@ -103,9 +113,14 @@ private struct ReconciliationAccumulator {
     var claimedApplications: Set<ApplicationIdentity> = []
     var claimedFolders: Set<UUID> = []
 
-    init(catalog: [ApplicationRecord], completeness: LauncherCatalogCompleteness) {
+    init(
+        catalog: [ApplicationRecord],
+        completeness: LauncherCatalogCompleteness,
+        reserving: Set<ApplicationIdentity>
+    ) {
         self.catalog = catalog
         self.completeness = completeness
+        self.reserving = reserving
         catalogIdentities = Set(catalog.map(\.id))
         pathAliases = Dictionary(
             catalog.map { (ApplicationIdentity.bundlePath(for: $0.bundleURL), $0.id) },
@@ -160,7 +175,7 @@ private struct ReconciliationAccumulator {
         if let canonicalIdentity {
             return claimCanonical(canonicalIdentity, replacing: reference.identity)
         }
-        guard completeness == .partial else {
+        guard completeness == .partial || reserving.contains(reference.identity) else {
             report.removedApplications.append(reference.identity)
             return nil
         }

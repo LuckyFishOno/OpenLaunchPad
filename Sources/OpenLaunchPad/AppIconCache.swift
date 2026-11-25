@@ -10,9 +10,29 @@ import AppKit
     private struct Request: Hashable, Sendable {
         let identity: ApplicationIdentity
         let path: String
+        // An update at the same path can bring a new icon.
+        let contentStamp: ApplicationContentStamp?
         let pixelSize: Int
 
-        var cacheKey: NSString { "\(identity)|\(path)" as NSString }
+        init(application: ApplicationRecord, pixelSize: Int) {
+            identity = application.id
+            path = application.bundleURL.path
+            contentStamp = application.contentStamp
+            self.pixelSize = pixelSize
+        }
+
+        var cacheKey: NSString { Self.cacheKey(identity: identity, path: path, contentStamp: contentStamp) }
+
+        static func cacheKey(for application: ApplicationRecord) -> NSString {
+            cacheKey(
+                identity: application.id, path: application.bundleURL.path, contentStamp: application.contentStamp)
+        }
+
+        private static func cacheKey(
+            identity: ApplicationIdentity, path: String, contentStamp: ApplicationContentStamp?
+        ) -> NSString {
+            "\(identity)|\(path)|\(contentStamp?.description ?? "")" as NSString
+        }
     }
 
     private final class CachedIcon {
@@ -222,14 +242,12 @@ extension AppIconCache {
         return cached.image
     }
 
-    private func cacheKey(for application: ApplicationRecord) -> NSString {
-        "\(application.id)|\(application.bundleURL.path)" as NSString
-    }
+    private func cacheKey(for application: ApplicationRecord) -> NSString { Request.cacheKey(for: application) }
 
     private func makeRequest(for application: ApplicationRecord, pointSize: CGFloat, scale: CGFloat) -> Request {
         let proposedPixelSize = pointSize * scale
         let pixelSize = proposedPixelSize.isFinite ? max(1, Int(proposedPixelSize.rounded())) : 1
-        return Request(identity: application.id, path: application.bundleURL.path, pixelSize: pixelSize)
+        return Request(application: application, pixelSize: pixelSize)
     }
 
     private func loadPinnedFirstPageCGImage(for application: ApplicationRecord, pointSize: CGFloat, scale: CGFloat)
@@ -263,7 +281,7 @@ extension AppIconCache {
 
     private func loadPinnedFirstPageFolderMiniature(for application: ApplicationRecord, pixelSize: Int) async
         -> CGImage? {
-        let request = Request(identity: application.id, path: application.bundleURL.path, pixelSize: max(1, pixelSize))
+        let request = Request(application: application, pixelSize: max(1, pixelSize))
 
         // A full-size first-page pin can satisfy the miniature for free. This
         // also prevents duplicate storage if a layout ever references the same

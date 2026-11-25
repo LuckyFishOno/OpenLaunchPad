@@ -87,45 +87,6 @@ public struct LauncherLayoutCodec: Sendable {
     }
 }
 
-public protocol LauncherLayoutFileIO: Sendable {
-    func readData(at url: URL) throws -> Data?
-    func writeDataAtomically(_ data: Data, to url: URL) throws
-    func preservePreMigrationData(_ data: Data, at url: URL) throws
-}
-
-public extension LauncherLayoutFileIO {
-    /// Custom/in-memory stores may supply their own backup policy.
-    func preservePreMigrationData(_: Data, at _: URL) throws {}
-}
-
-public struct AtomicLauncherLayoutFileIO: LauncherLayoutFileIO {
-    public init() {}
-
-    public func readData(at url: URL) throws -> Data? {
-        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
-        return try Data(contentsOf: url)
-    }
-
-    public func writeDataAtomically(_ data: Data, to url: URL) throws {
-        try FileManager.default.createDirectory(
-            at: url.deletingLastPathComponent(),
-            withIntermediateDirectories: true
-        )
-        try data.write(to: url, options: .atomic)
-    }
-
-    public func preservePreMigrationData(_ data: Data, at url: URL) throws {
-        let backupURL = url.deletingPathExtension()
-            .appendingPathExtension("pre-pages.backup.json")
-        guard !FileManager.default.fileExists(atPath: backupURL.path) else { return }
-        do {
-            try data.write(to: backupURL, options: .withoutOverwriting)
-        } catch let error as CocoaError where error.code == .fileWriteFileExists {
-            // Another reader already preserved the original. Never replace it.
-        }
-    }
-}
-
 public enum LauncherLayoutTransactionDisposition: Sendable {
     case commit
     case rollback
@@ -143,15 +104,21 @@ public actor LauncherLayoutStore {
     private let fileIO: any LauncherLayoutFileIO
     private let codec: LauncherLayoutCodec
     private var cachedDocument: LauncherLayoutDocument?
+    private var missingApplications: MissingApplicationLedger
+
+    /// Long enough for an updater or a manual reinstall to finish.
+    public static let defaultMissingApplicationGrace: TimeInterval = 600
 
     public init(
         fileURL: URL = LauncherLayoutStore.defaultFileURL,
         fileIO: any LauncherLayoutFileIO = AtomicLauncherLayoutFileIO(),
-        codec: LauncherLayoutCodec = LauncherLayoutCodec()
+        codec: LauncherLayoutCodec = LauncherLayoutCodec(),
+        missingApplicationGrace: TimeInterval = LauncherLayoutStore.defaultMissingApplicationGrace
     ) {
         self.fileURL = fileURL
         self.fileIO = fileIO
         self.codec = codec
+        missingApplications = MissingApplicationLedger(grace: missingApplicationGrace)
     }
 
     public nonisolated static var defaultFileURL: URL {
@@ -265,9 +232,12 @@ public actor LauncherLayoutStore {
         return try commit(draft.document, replacing: currentDocument)
     }
 
+    /// Applies a catalog scan to the saved layout. `now` is the system uptime,
+    /// which does not advance while the Mac sleeps and no update can progress.
     public func reconcileAndCommit(
         applications: [ApplicationRecord],
-        completeness: LauncherCatalogCompleteness = .complete
+        completeness: LauncherCatalogCompleteness = .complete,
+        now: TimeInterval = ProcessInfo.processInfo.systemUptime
     ) throws -> LauncherLayoutReconciliationResult {
         let currentDocument = try load()
 
@@ -305,22 +275,50 @@ public actor LauncherLayoutStore {
             )
         }
 
-        let reconciliation = LauncherLayoutReconciler.reconcile(
+        let reconciliation = reconcile(
             currentDocument,
             with: applications,
-            completeness: completeness
+            completeness: completeness,
+            now: now
         )
+        let reviewDelay = missingApplications.timeUntilReview(at: now)
         guard reconciliation.document.pages != currentDocument.pages else {
             return LauncherLayoutReconciliationResult(
                 document: currentDocument,
-                report: reconciliation.report
+                report: reconciliation.report,
+                reviewDelay: reviewDelay
             )
         }
 
         let committedDocument = try commit(reconciliation.document, replacing: currentDocument)
         return LauncherLayoutReconciliationResult(
             document: committedDocument,
-            report: reconciliation.report
+            report: reconciliation.report,
+            reviewDelay: reviewDelay
+        )
+    }
+
+    private func reconcile(
+        _ document: LauncherLayoutDocument,
+        with applications: [ApplicationRecord],
+        completeness: LauncherCatalogCompleteness,
+        now: TimeInterval
+    ) -> LauncherLayoutReconciliationResult {
+        let reconciliation = LauncherLayoutReconciler.reconcile(
+            document,
+            with: applications,
+            completeness: completeness
+        )
+        // A partial scan keeps every reference and says nothing about absence.
+        guard completeness == .complete else { return reconciliation }
+        missingApplications.record(missing: Set(reconciliation.report.removedApplications), at: now)
+        let reserved = missingApplications.reserved(at: now)
+        guard !reserved.isEmpty else { return reconciliation }
+        return LauncherLayoutReconciler.reconcile(
+            document,
+            with: applications,
+            completeness: completeness,
+            reserving: reserved
         )
     }
 

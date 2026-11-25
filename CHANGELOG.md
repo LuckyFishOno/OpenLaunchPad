@@ -1,5 +1,34 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- An app that disappears while it is updated or reinstalled keeps its position
+  and folder for ten minutes instead of moving to the end of the last page.
+- A change in the application folders during a drag no longer makes that drag and
+  every later one fail. After a save conflict, the next drag works again.
+- A catalog refresh no longer closes an open folder. Changes wait until the folder
+  closes or the drag ends, and a refresh that finds nothing new changes nothing.
+- An updated app shows its new name and icon without restarting the agent. Icons of
+  newly installed first-page apps are loaded before the next opening.
+- Apps added to or removed from subfolders are noticed, and so is a `~/Applications`
+  folder created later.
+
+### Validation
+
+- All 219 deterministic core tests passed.
+- The new catalog refresh check passed, and the existing drag, folder, paging, icon,
+  search, and update checks still pass.
+
+### 繁體中文
+
+- App 更新或重新安裝時，位置與資料夾會保留十分鐘，不會再排到最後一頁。
+- 拖曳途中 App 清單變動，不會再讓這次與之後的拖曳失敗。
+- 清單更新不會再關閉開啟中的資料夾；沒有變動時不會重新整理畫面。
+- App 更新後會顯示新名稱與新圖示，不需重新啟動背景程式。
+- 會偵測子資料夾的變動，也會偵測之後才建立的 `~/Applications`。
+
 ## 1.2.1 (build 4) — 2026-11-25
 
 ### Fixed

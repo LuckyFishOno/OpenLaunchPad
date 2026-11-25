@@ -58,6 +58,8 @@ import QuartzCore
     // folder later is a cache hit instead of a new decode burst.
     let iconPrewarmTasks = IconPrewarmTasks()
 
+    let catalogRefreshTasks = CatalogRefreshTasks()
+
     var pagingDisplayLink: CADisplayLink?
 
     var isPageTransitionActive: Bool {
@@ -72,8 +74,8 @@ import QuartzCore
     let dragCommit = DragCommitCoordinator<LaunchpadDragCommitContext>()
     let folderReorderCommit = DragCommitCoordinator<FolderItemDragSession>()
     var isCommittingLayout = false
-    private var isFinishingDragVisuals = false
-    private var isResettingLayout = false
+    var isFinishingDragVisuals = false
+    var isResettingLayout = false
 
     let folderPresentation = FolderPresentation()
     let folderPaging = FolderPagingController()
@@ -124,36 +126,6 @@ import QuartzCore
         searchField.resetForPresentation()
         window?.makeFirstResponder(self)
         searchDidChange()
-    }
-
-    func refreshApplicationsFromDisk() async {
-        let discovery = await catalog.refreshOutcome()
-        applications = discovery.applications
-        do {
-            let reconciliation = try await layoutStore.reconcileAndCommit(
-                applications: discovery.applications, completeness: discovery.completeness)
-            layoutDocument = reconciliation.document
-        } catch {
-            layoutDocument =
-                LauncherLayoutReconciler.reconcile(
-                    LauncherLayoutDocument(), with: discovery.applications, completeness: discovery.completeness
-                ).document
-        }
-
-        selectedIndex = -1
-        if searchField.stringValue.isEmpty, let metrics = currentMetrics {
-            let pages = ResolvedLaunchpadItemFactory.makePages(
-                document: layoutDocument, applications: applications, query: "", pageCapacity: metrics.itemsPerPage)
-            currentPage = min(currentPage, max(0, pages.pageCount - 1))
-        } else {
-            currentPage = 0
-        }
-        resetPageTransition()
-        closeFolder(animated: false)
-        invalidatePageSurfaceCache()
-        needsLayout = true
-
-        if presentationResourcesActive { scheduleIdleFirstPageIconWarm() }
     }
 
     func prepareForPresentation(displayContext: DisplayContext) {
