@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.2.4 (build 7) — 2026-11-26
+
+### Changed
+
+- When a folder has only one app left because the other was deleted or is being
+  updated, the app now replaces the folder at once instead of after ten minutes.
+  If the other app returns within ten minutes, the folder comes back in place
+  with its name and order.
+
+### Validation
+
+- All 224 deterministic core tests passed, including the new folder cases.
+- All 19 runtime checks passed, including reset, drag, folder, catalog refresh,
+  and update checks.
+- Apple silicon Release build and deep signature verification passed.
+
+### 繁體中文
+
+- 資料夾因 App 被刪除或正在更新而只剩一個 App 時，會立刻變回單一 App，不再等十分鐘。
+  若另一個 App 在十分鐘內回來，資料夾會以原本的名稱與順序回到原位。
+
 ## 1.2.3 (build 6) — 2026-11-26
 
 The app behaves as in 1.2.2. This release corrects a test.
