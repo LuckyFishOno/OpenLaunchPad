@@ -66,7 +66,7 @@ OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格�
 ## 功能
 
 - 自動適應顯示器的全螢幕應用程式網格
-- 掃描已安裝的應用程式，並在新增應用程式後自動更新
+- 掃描已安裝的應用程式，並跟上新增、移除與更新的應用程式，也包含子資料夾中的應用程式
 - 支援輸入法組字的即時本機搜尋
 - 建立與管理資料夾
 - 跨頁拖放整理，並保存排列
@@ -110,7 +110,7 @@ OpenLaunchPad 為 Apple silicon Mac 帶來熟悉的全螢幕應用程式網格�
 
 ## 基本操作
 
-OpenLaunchPad 開啟後會顯示全螢幕應用程式網格。安裝至 `/Applications`、`/System/Applications` 或 `~/Applications` 的新應用程式會被自動偵測並加入版面。
+OpenLaunchPad 開啟後會顯示全螢幕應用程式網格。安裝至 `/Applications`、`/System/Applications` 或 `~/Applications`（包含其中的子資料夾）的新應用程式會被自動偵測並加入版面。刪除的應用程式會立刻從網格移除；被更新程式取代的應用程式會回到原本的位置與資料夾。
 
 - 直接輸入文字即可搜尋。
 - 拖曳應用程式可調整順序。
@@ -154,7 +154,7 @@ swift test --filter FolderMergeGeometryTests
 swift test --filter LauncherLayoutStoreTests/testReconcileAndCommitAppendsNewApplicationsToExistingLayout
 ```
 
-核心測試套件目前包含 201 項確定性測試。視窗、桌布、搜尋、翻頁、拖曳與選單列動畫的 AppKit runtime 檢查方式，請參閱 [Tests/Runtime/README.md](Tests/Runtime/README.md)。
+核心測試套件目前包含 224 項確定性測試。視窗、桌布、搜尋、翻頁、拖曳與選單列動畫的 AppKit runtime 檢查方式，請參閱 [Tests/Runtime/README.md](Tests/Runtime/README.md)。
 
 ## 本機資料與隱私
 

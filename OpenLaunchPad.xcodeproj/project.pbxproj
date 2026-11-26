@@ -132,6 +132,7 @@
 		D6095ADAAD03310407522171 /* BundleInfoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99AAC44BE2192519DE8B064 /* BundleInfoReader.swift */; };
 		D6E34E309D9F03301EC2CF5F /* DisplayCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A4BD30C2540632E8CE677B9 /* DisplayCore.framework */; };
 		D92868694DEF214BD33BCA4A /* AppUpdates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7393BC329D797ECBABB8D25 /* AppUpdates.swift */; };
+		DA94B8A97D3EAFDA325D88AA /* SplitFolderLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A980482F28DD9591CFEE13 /* SplitFolderLedger.swift */; };
 		DDFB7554C5592F19D7B81F6F /* LayoutConstraintSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248BF42F11806CFE3A523E77 /* LayoutConstraintSolver.swift */; };
 		DE12184EF7CF0710B869A246 /* UserLayoutPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA12D08BBC1B90D9B11F14F /* UserLayoutPreferences.swift */; };
 		DF10E2109EE685AC0C2FA18A /* LauncherDefaultLayoutBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49EDDD395F30812ADE5C2D2 /* LauncherDefaultLayoutBuilderTests.swift */; };
@@ -322,6 +323,7 @@
 		3E7263FA0CF3B6B4FE0619DC /* DragProxyPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragProxyPresentation.swift; sourceTree = "<group>"; };
 		4086D10396205FD70205DE27 /* MissingApplicationLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingApplicationLedger.swift; sourceTree = "<group>"; };
 		41F0ECE5AFC011547B2AE862 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		43A980482F28DD9591CFEE13 /* SplitFolderLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitFolderLedger.swift; sourceTree = "<group>"; };
 		4527154EF1638E7DDB796054 /* CenteredPresentationTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredPresentationTransform.swift; sourceTree = "<group>"; };
 		46129CFDE4F1C0F18355CE13 /* DragInteractionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragInteractionCoordinator.swift; sourceTree = "<group>"; };
 		4C67EB4D9671721774EF285E /* LaunchpadRootView+PageSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchpadRootView+PageSwipe.swift"; sourceTree = "<group>"; };
@@ -554,6 +556,7 @@
 				63A3DCE73A16485A523BA5DE /* PageMotionProfile.swift */,
 				4FE7E7E8E990637FFED6F8A5 /* PageSwipeInputGate.swift */,
 				B1151B3111548BAF43D88F2F /* PageTransitionState.swift */,
+				43A980482F28DD9591CFEE13 /* SplitFolderLedger.swift */,
 			);
 			path = AppCore;
 			sourceTree = "<group>";
@@ -958,6 +961,7 @@
 				4218F4AB7B56DBF80BA75DE0 /* PageMotionProfile.swift in Sources */,
 				6F1E2FF670846B0FCD701577 /* PageSwipeInputGate.swift in Sources */,
 				3B96C15FF93FACA07A962C4D /* PageTransitionState.swift in Sources */,
+				DA94B8A97D3EAFDA325D88AA /* SplitFolderLedger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

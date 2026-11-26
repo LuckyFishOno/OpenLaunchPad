@@ -29,7 +29,7 @@ remain presentation-only.
 
 ## Verification
 
-`swift test` passes 185 core tests, including bounded material geometry, portrait
+When this was measured, `swift test` passed 185 core tests, including bounded material geometry, portrait
 displays, blur scaling, and invalid inputs. `WallpaperRasterCheck.swift` passes
 298 assertions over 1×, 1.25×, 2×, and 3× scales, all wallpaper scaling modes,
 and clipping on/off. It checks unchanged small-raster output, exact native plain

@@ -67,7 +67,7 @@ OpenLaunchPad is for Mac users who miss a simple, visual way to open and organiz
 ## Features
 
 - Adaptive full-screen app grid
-- Installed app discovery with automatic refresh when new apps are added
+- Installed app discovery that follows new, removed, and updated apps, including apps in subfolders
 - Instant local search with IME-aware input
 - Folder creation and management
 - Persistent drag-and-drop organization across pages
@@ -111,7 +111,7 @@ After this one-time approval, OpenLaunchPad opens normally. If you would rather 
 
 ## First use
 
-OpenLaunchPad opens as a full-screen app grid. New apps installed into `/Applications`, `/System/Applications`, or `~/Applications` are detected and added to the pane automatically.
+OpenLaunchPad opens as a full-screen app grid. New apps installed into `/Applications`, `/System/Applications`, or `~/Applications`, or into their subfolders, are detected and added to the pane automatically. A deleted app leaves the grid at once. An app that an updater replaces returns to its place and folder.
 
 Useful interactions:
 
@@ -157,7 +157,7 @@ swift test --filter FolderMergeGeometryTests
 swift test --filter LauncherLayoutStoreTests/testReconcileAndCommitAppendsNewApplicationsToExistingLayout
 ```
 
-The core suite currently contains 201 deterministic tests. AppKit runtime
+The core suite currently contains 224 deterministic tests. AppKit runtime
 checks for window, wallpaper, search, paging, drag, and menu-bar animation
 behavior are documented in [Tests/Runtime/README.md](Tests/Runtime/README.md).
 

@@ -33,6 +33,14 @@ empty, the menu command is hidden and `release.sh` refuses to build.
 5. On a Mac with the previous release, choose **Check for Updates** and confirm
    that it offers, installs, and reopens the new version.
 
+If `publish` stops on a GitHub server error, check the releases including drafts
+(`gh api repos/LuckyFishOno/OpenLaunchPad/releases`) before running it again. A
+second run creates another release. If an unpublished draft was left, upload the
+missing files to it with `gh release upload`, compare their digests with the
+local files, and publish it with `gh release edit TAG --draft=false --latest`.
+`releases/latest/download` can serve the previous release for a few minutes
+afterwards.
+
 Copies without the updater (1.1 and earlier) must be updated by hand once. From
 1.2.1 on, opening the replaced app also ends the outdated agent.
 

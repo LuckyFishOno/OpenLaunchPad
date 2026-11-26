@@ -164,7 +164,7 @@ finish as one coordinated drag commit.
 
 ### Regression Coverage
 
-The current suite passes 185 Swift core tests and the Debug application build.
+The current suite passes 224 Swift core tests and the Debug application build.
 `LauncherPageLayoutTests` contains 19 deterministic cases for
 legacy migration, explicit page round-tripping, empty/partial pages, overflow,
 forward/reverse moves, folders, reconciliation, and boundary-only commits.
@@ -195,9 +195,19 @@ with `BundleInfoReader`, in the language `Bundle` would use.
 Updaters remove an application before its replacement appears. After a complete
 scan, `LauncherLayoutStore` keeps the reference of a missing application for
 `defaultMissingApplicationGrace` (`MissingApplicationLedger`), then removes it at
-the scan requested through `reviewDelay`. A folder shows its remaining application
-meanwhile. Because saved folders can hold unresolved references, a visible folder
-slot is mapped through `ResolvedLaunchpadInsertionIndex` before it is saved.
+the scan requested through `reviewDelay`. The reference is invisible, so the
+following items of its page move up at once; an application that returns in time
+takes its old place again.
+
+A folder left with one available application is taken apart at once
+(`SplitFolderLedger`): the application takes the folder's place, and the missing
+references leave the layout so that they take no slot. If one of them returns
+within the same grace, the folder is put back where that application is, with
+its identifier, title, and order. This memory is not saved; after a restart a
+returning application is added at the end. Partial scans change neither ledger,
+and a folder then shows its available applications, even if only one is left.
+Because saved pages can hold unresolved references, a visible slot is mapped
+through `ResolvedLaunchpadInsertionIndex` before it is saved.
 
 `LaunchpadRootView+CatalogRefresh` applies a scan only when no drag, commit, reset,
 page transition, or open folder would be disturbed, and only when something

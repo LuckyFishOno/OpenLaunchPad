@@ -105,6 +105,7 @@ public actor LauncherLayoutStore {
     private let codec: LauncherLayoutCodec
     private var cachedDocument: LauncherLayoutDocument?
     private var missingApplications: MissingApplicationLedger
+    private var splitFolders: SplitFolderLedger
 
     /// Long enough for an updater or a manual reinstall to finish.
     public static let defaultMissingApplicationGrace: TimeInterval = 600
@@ -119,6 +120,7 @@ public actor LauncherLayoutStore {
         self.fileIO = fileIO
         self.codec = codec
         missingApplications = MissingApplicationLedger(grace: missingApplicationGrace)
+        splitFolders = SplitFolderLedger(grace: missingApplicationGrace)
     }
 
     public nonisolated static var defaultFileURL: URL {
@@ -313,13 +315,18 @@ public actor LauncherLayoutStore {
         guard completeness == .complete else { return reconciliation }
         missingApplications.record(missing: Set(reconciliation.report.removedApplications), at: now)
         let reserved = missingApplications.reserved(at: now)
-        guard !reserved.isEmpty else { return reconciliation }
-        return LauncherLayoutReconciler.reconcile(
+        let result = reserved.isEmpty ? reconciliation : LauncherLayoutReconciler.reconcile(
             document,
             with: applications,
             completeness: completeness,
             reserving: reserved
         )
+        // A folder with one available application is taken apart at once and
+        // put back if one of the others returns in time.
+        var shown = result.document
+        shown.pages = splitFolders.apply(to: shown.pages, available: Set(applications.map(\.id)), at: now)
+        return LauncherLayoutReconciliationResult(
+            document: shown, report: result.report, reviewDelay: result.reviewDelay)
     }
 
     /// Replaces every customized page/folder with the canonical default layout.

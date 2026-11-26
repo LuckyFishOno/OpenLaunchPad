@@ -43,7 +43,8 @@ finished. It does not inject global events or require Accessibility permission.
 `CatalogRefreshCheck.swift` compiles alongside the real UI sources and keeps its
 window hidden. It checks that a refresh leaves an open folder and an active drag
 alone and is applied afterwards, that a drag works again after a save conflict,
-that a folder keeps showing its remaining application, that a pinned icon follows
+that a folder with one available application stays visible while the catalog is
+incomplete, that a pinned icon follows
 updated artwork, and that the directory monitor notices subfolders. Set
 `OPENLAUNCHPAD_LAYOUT_PATH` inside `/private/tmp`. Fixtures are created next to it;
 the application folders are only read.
@@ -180,7 +181,8 @@ Success ends with `RESOLVED PAGES: 42 assertions passed`.
 isolated layout file. It invokes the real search-field menu callback, verifies
 that cancelling the confirmation leaves the exact document unchanged, then
 confirms reset and checks the canonical default layout, replacement of custom
-folders by Utilities, and a single revision increment.
+folders by Utilities, and a single revision increment. It takes the expected
+applications from the launcher's own catalog, which leaves out OpenLaunchPad.
 
 Compile it using the same command as `CrossPageDragCheck.swift`, replacing that
 source filename and output name with `ResetLaunchpadCheck.swift` and
